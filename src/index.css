@@ -1,0 +1,136 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --font: 'Plus Jakarta Sans', system-ui, sans-serif;
+
+  /* Brand */
+  --coral:    #D85A30;
+  --coral-lt: #FAECE7;
+  --coral-md: #F0997B;
+
+  /* Neutrals */
+  --bg:       #F5F4F0;
+  --surface:  #FFFFFF;
+  --border:   #E0DED8;
+  --border-md:#C8C6C0;
+  --text:     #1E1D1B;
+  --text-2:   #5A5955;
+  --text-3:   #8C8A85;
+
+  /* Semantic */
+  --green:    #0F6E56;
+  --green-lt: #E1F5EE;
+  --blue:     #185FA5;
+  --blue-lt:  #E6F1FB;
+  --purple:   #534AB7;
+  --purple-lt:#EEEDFE;
+  --red:      #A32D2D;
+  --red-lt:   #FCEBEB;
+  --amber:    #854F0B;
+  --amber-lt: #FAEEDA;
+
+  /* Layout */
+  --sidebar-w: 240px;
+  --header-h:  52px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.07), 0 1px 2px rgba(0,0,0,.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,.10), 0 2px 4px rgba(0,0,0,.06);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.06);
+}
+
+html, body, #root {
+  height: 100%;
+  overflow: hidden;
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbars */
+::-webkit-scrollbar          { width: 5px; height: 5px; }
+::-webkit-scrollbar-track    { background: transparent; }
+::-webkit-scrollbar-thumb    { background: var(--border-md); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-3); }
+
+/* Button resets */
+button { font-family: var(--font); cursor: pointer; border: none; background: none; }
+
+/* Input resets */
+input, textarea, select {
+  font-family: var(--font);
+  font-size: 13.5px;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  outline: none;
+  transition: border-color .15s;
+}
+input:focus, textarea:focus, select:focus { border-color: var(--coral); }
+
+/* Utility classes */
+.flex        { display: flex; }
+.flex-center { display: flex; align-items: center; justify-content: center; }
+.flex-col    { display: flex; flex-direction: column; }
+.gap-1 { gap: 4px; }
+.gap-2 { gap: 8px; }
+.gap-3 { gap: 12px; }
+.gap-4 { gap: 16px; }
+
+.text-sm  { font-size: 12px; }
+.text-md  { font-size: 13.5px; }
+.text-muted { color: var(--text-3); }
+.font-600 { font-weight: 600; }
+
+.truncate { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Priority badges */
+.badge {
+  display: inline-flex; align-items: center;
+  font-size: 11px; font-weight: 600;
+  padding: 2px 8px; border-radius: 20px;
+  white-space: nowrap;
+}
+.badge-high   { background: var(--red-lt);    color: var(--red); }
+.badge-med    { background: var(--amber-lt);  color: var(--amber); }
+.badge-low    { background: var(--green-lt);  color: var(--green); }
+.badge-admin  { background: var(--purple-lt); color: var(--purple); }
+.badge-member { background: var(--green-lt);  color: var(--green); }
+.badge-todo   { background: #F1EFE8; color: #444441; }
+.badge-inprog { background: var(--blue-lt);   color: var(--blue); }
+.badge-review { background: var(--purple-lt); color: var(--purple); }
+.badge-done   { background: var(--green-lt);  color: var(--green); }
+
+/* Avatar */
+.avatar {
+  border-radius: 50%; display: flex; align-items: center;
+  justify-content: center; font-weight: 600; color: #fff;
+  flex-shrink: 0; user-select: none;
+}
+.avatar-sm { width: 24px; height: 24px; font-size: 10px; }
+.avatar-md { width: 32px; height: 32px; font-size: 12px; }
+.avatar-lg { width: 44px; height: 44px; font-size: 16px; }
+.avatar-xl { width: 56px; height: 56px; font-size: 20px; }
+
+/* Divider */
+.divider { height: 1px; background: var(--border); flex-shrink: 0; }
+
+/* Overlay */
+.overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.35);
+  z-index: 500;
+  display: flex; align-items: center; justify-content: center;
+  animation: fadeIn .15s ease;
+}
+@keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(16px) } to { opacity: 1; transform: translateY(0) } }

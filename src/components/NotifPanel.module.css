@@ -1,0 +1,45 @@
+.backdrop {
+  position: fixed; inset: 0; z-index: 200;
+}
+.panel {
+  position: fixed;
+  top: calc(var(--header-h) + 8px);
+  right: 16px;
+  width: 310px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  z-index: 201;
+  box-shadow: var(--shadow-lg);
+  animation: slideUp .15s ease;
+  overflow: hidden;
+}
+.header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+}
+.markAll {
+  display: flex; align-items: center; gap: 4px;
+  font-size: 12px; color: var(--coral);
+  padding: 3px 8px; border-radius: var(--radius-sm);
+  transition: background .12s;
+}
+.markAll:hover { background: var(--coral-lt); }
+.list { max-height: 380px; overflow-y: auto; }
+.item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--bg);
+  cursor: pointer;
+  transition: background .1s;
+}
+.item:hover { background: var(--bg); }
+.unread { background: #fdf9f7; }
+.dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--coral);
+  margin-top: 5px; flex-shrink: 0;
+}
+.itemText { font-size: 13px; color: var(--text); margin-bottom: 2px; }
+.itemSub  { font-size: 11.5px; color: var(--text-3); }

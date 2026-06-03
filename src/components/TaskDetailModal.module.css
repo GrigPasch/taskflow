@@ -1,0 +1,117 @@
+.wrap { display: flex; flex-direction: column; gap: 14px; }
+
+.nameInput {
+  width: 100%;
+  height: 42px;
+  font-size: 17px;
+  font-weight: 600;
+  border-color: transparent;
+  border-radius: var(--radius-md);
+  padding: 0 10px;
+  background: var(--bg);
+}
+.nameInput:focus { border-color: var(--coral); background: var(--surface); }
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.field { display: flex; flex-direction: column; gap: 5px; }
+
+.label {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: .4px;
+}
+
+.input, .select {
+  height: 34px;
+  padding: 0 10px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  width: 100%;
+}
+
+.textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 8px 10px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.comments {
+  background: var(--bg);
+  border-radius: var(--radius-md);
+  padding: 10px;
+  min-height: 48px;
+  margin-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.noComments { font-size: 13px; color: var(--text-3); }
+
+.comment {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.commentAuthor { font-size: 12px; font-weight: 600; color: var(--text-2); }
+.commentText   { font-size: 13px; color: var(--text); margin-top: 2px; }
+
+.commentInput {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.commentInput input {
+  flex: 1;
+  height: 34px;
+  padding: 0 10px;
+}
+.sendBtn {
+  width: 34px; height: 34px;
+  background: var(--coral);
+  color: #fff;
+  border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: background .12s;
+}
+.sendBtn:hover { background: #b84a22; }
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 4px;
+  border-top: 1px solid var(--border);
+}
+.deleteBtn {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 13px; color: var(--red);
+  padding: 6px 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  transition: background .12s;
+}
+.deleteBtn:hover { background: var(--red-lt); border-color: var(--red); }
+
+.closeBtn {
+  padding: 7px 18px;
+  background: var(--coral);
+  color: #fff;
+  border-radius: var(--radius-md);
+  font-size: 13.5px;
+  font-weight: 500;
+  transition: background .12s;
+}
+.closeBtn:hover { background: #b84a22; }
