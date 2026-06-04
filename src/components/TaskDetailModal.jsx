@@ -21,6 +21,19 @@ export default function TaskDetailModal({ task, onClose }) {
 
   const field = (key) => (e) => { if (canEdit) updateTask(task.id, { [key]: e.target.value }) }
 
+  // Smart section change — syncs done state automatically
+  const handleSectionChange = (e) => {
+    if (!canEdit) return
+    const section = e.target.value
+    const doneSection = project?.sections?.[project.sections.length - 1] || 'Ολοκληρώθηκε'
+    const isDoneSection = section === doneSection
+    updateTask(task.id, {
+      section,
+      done: isDoneSection,
+    })
+    if (isDoneSection) onClose()
+  }
+
   const handleDelete = () => { deleteTask(task.id); onClose() }
 
   const handleComment = () => {
@@ -75,8 +88,8 @@ export default function TaskDetailModal({ task, onClose }) {
           </div>
           <div className={styles.field}>
             <label className={styles.label}>Section</label>
-            <select className={styles.select} defaultValue={task.section} onChange={field('section')}>
-              {(project?.sections || ['To Do','In Progress','Review','Κλείσιμο']).map(s => <option key={s}>{s}</option>)}
+            <select className={styles.select} defaultValue={task.section} onChange={handleSectionChange}>
+              {(project?.sections || ['Προς Εκτέλεση','Σε Εξέλιξη','Έλεγχος','Ολοκληρώθηκε']).map(s => <option key={s}>{s}</option>)}
             </select>
           </div>
           <div className={styles.field}>

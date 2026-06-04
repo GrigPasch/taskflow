@@ -322,9 +322,12 @@ const useStore = create(
         const project     = get().projects.find(p => p.id === task?.projectId)
         if (!canEditTask(task, project, currentUser)) return false
         const done = !task.done
+        // Use the last section of the project as the "done" section
+        const doneSection    = project?.sections?.[project.sections.length - 1] || 'Ολοκληρώθηκε'
+        const defaultSection = project?.sections?.[0] || 'Προς Εκτέλεση'
         set(s => ({
           tasks: s.tasks.map(x => x.id === id
-            ? { ...x, done, section: done ? 'Ολοκληρώθηκε' : (x.section === 'Ολοκληρώθηκε' ? 'Προς Εκτέλεση' : x.section) }
+            ? { ...x, done, section: done ? doneSection : (x.section === doneSection ? defaultSection : x.section) }
             : x),
         }))
         get().pushUpdate(done ? `✓ "${task.name}" ολοκληρώθηκε` : `"${task.name}" επαναστάθηκε`)
