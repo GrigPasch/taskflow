@@ -256,20 +256,22 @@ const useStore = create(
 
         if (task.assigneeId && task.assigneeId !== currentUser.id) {
           const assignee = get().members.find(m => m.id === task.assigneeId)
-          // targetUserId ensures only the assignee sees this notification
           set(s => ({ notifications: [
             { id: uuid(), read: false, targetUserId: task.assigneeId, text: `${currentUser.name} σας ανέθεσε "${task.name}"`, sub: `${project?.name} · μόλις τώρα` },
             ...s.notifications,
           ]}))
+          // Has assignee — send taskAssigned only, skip taskCreated to avoid double message
           get()._slack(
             `:bell: *Νέα εργασία για σένα, ${assignee?.name}!*\n>${task.name}\n<${window.location.origin}/projects/${task.projectId}|Άνοιγμα εργασίας →>`,
             'taskAssigned', task.projectId
           )
+        } else {
+          // No assignee — send taskCreated
+          get()._slack(
+            `:memo: *Νέα εργασία:* ${task.name}\n<${window.location.origin}/projects/${task.projectId}|Άνοιγμα →>`,
+            'taskCreated', task.projectId
+          )
         }
-        get()._slack(
-          `:memo: *Νέα εργασία:* ${task.name}\n<${window.location.origin}/projects/${task.projectId}|Άνοιγμα →>`,
-          'taskCreated', task.projectId
-        )
         return id
       },
 
