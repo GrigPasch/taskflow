@@ -170,22 +170,186 @@
 }
 .colAddBtn:hover { border-color: var(--coral); color: var(--coral); background: var(--coral-lt); }
 
+
 /* TIMELINE VIEW */
-.timelineWrap { padding: 16px 24px; overflow-y: auto; height: 100%; }
-.timelineScale {
-  display: flex; justify-content: space-between;
-  font-size: 11px; color: var(--text-3);
-  margin-bottom: 12px; padding: 0 164px 0 164px;
+.tlWrap { display: flex; flex-direction: column; height: 100%; overflow: hidden; }
+
+.tlControls {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 16px 8px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  background: var(--surface);
 }
-.tlRow {
-  display: flex; align-items: center; gap: 12px;
-  padding: 6px 0;
-  border-bottom: 1px solid var(--bg);
-  cursor: pointer;
+.tlNavBtn {
+  width: 28px; height: 28px; border-radius: var(--radius-md);
+  border: 1px solid var(--border); background: var(--surface);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--text-2); transition: background .12s;
+}
+.tlNavBtn:hover { background: var(--bg); }
+.tlTodayBtn {
+  height: 28px; padding: 0 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border); background: var(--surface);
+  font-size: 12.5px; color: var(--text-2); cursor: pointer;
+  transition: background .12s; font-family: inherit;
+}
+.tlTodayBtn:hover { background: var(--coral-lt); border-color: var(--coral); color: var(--coral); }
+.tlRange { font-size: 12.5px; color: var(--text-3); margin-left: 4px; }
+
+.tlGrid {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.tlLabelCol {
+  width: 170px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border);
+  background: var(--surface);
+  z-index: 2;
+}
+
+.tlHeaderCell {
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.tlRight {
+  flex: 1;
+  overflow-x: auto;
+  overflow-y: hidden;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.tlMonthRow {
+  position: relative;
+  height: 22px;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+}
+.tlMonthLabel {
+  position: absolute;
+  top: 0; height: 22px;
+  display: flex; align-items: center;
+  padding-left: 8px;
+  font-size: 11px; font-weight: 600;
+  color: var(--text-3);
+  text-transform: uppercase; letter-spacing: .4px;
+  border-right: 1px solid var(--border);
+}
+
+.tlDayHeader {
+  display: flex;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  height: 30px;
+}
+.tlDayCell {
+  flex: 1;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; color: var(--text-3);
+  border-right: .5px solid var(--border);
+  min-width: 28px;
   transition: background .1s;
 }
-.tlRow:hover { background: var(--surface); }
-.tlName  { width: 160px; font-size: 13px; color: var(--text); flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.tlTrack { flex: 1; height: 8px; background: var(--bg); border-radius: 4px; position: relative; }
-.tlBar   { height: 8px; border-radius: 4px; position: absolute; transition: left .3s, width .3s; }
-.tlDate  { width: 90px; font-size: 11px; color: var(--text-3); text-align: right; flex-shrink: 0; }
+.tlDayMon { border-right: 1px solid var(--border-md); }
+.tlDayToday {
+  background: var(--coral-lt);
+  color: var(--coral);
+  font-weight: 700;
+}
+.tlDayNum { line-height: 1; }
+
+.tlBody {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+  min-height: 100px;
+}
+
+/* Grid decorations */
+.tlWeekend {
+  position: absolute; top: 0; bottom: 0;
+  background: rgba(0,0,0,.025);
+  pointer-events: none; z-index: 0;
+}
+.tlGridLine {
+  position: absolute; top: 0; bottom: 0;
+  width: 1px; background: var(--border);
+  pointer-events: none; z-index: 0;
+}
+.tlTodayLine {
+  position: absolute; top: 0; bottom: 0;
+  width: 2px; background: var(--coral);
+  z-index: 3; pointer-events: none;
+}
+.tlTodayDot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--coral);
+  position: absolute; top: 4px; left: -3px;
+}
+
+.tlSectionLabel {
+  font-size: 11px; font-weight: 600;
+  color: var(--text-3);
+  text-transform: uppercase; letter-spacing: .5px;
+  padding: 10px 12px 4px;
+  position: relative; z-index: 1;
+}
+
+.tlRow {
+  position: relative;
+  height: 36px;
+  display: flex; align-items: center;
+  cursor: pointer;
+  z-index: 1;
+}
+.tlRow:hover { background: rgba(0,0,0,.02); }
+
+.tlBarTrack {
+  position: relative;
+  flex: 1; height: 100%;
+  display: flex; align-items: center;
+}
+
+.tlBar {
+  position: absolute;
+  height: 24px;
+  border-radius: 6px;
+  display: flex; align-items: center;
+  padding: 0 8px;
+  cursor: pointer;
+  transition: filter .15s, transform .1s;
+  z-index: 2;
+  min-width: 24px;
+  overflow: hidden;
+  white-space: nowrap;
+  box-shadow: 0 1px 3px rgba(0,0,0,.15);
+}
+.tlBar:hover { filter: brightness(1.1); transform: scaleY(1.05); }
+.tlBarDone { opacity: .7; }
+.tlBarLabel {
+  font-size: 11.5px; color: #fff;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  font-weight: 500; flex: 1;
+}
+.tlAvatar {
+  width: 18px; height: 18px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 8px; font-weight: 700; color: #fff;
+  flex-shrink: 0; margin-left: 4px;
+  border: 1.5px solid rgba(255,255,255,.5);
+}
+.tlOutOfView {
+  font-size: 11px; color: var(--text-3);
+  padding: 0 12px; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;
+}
