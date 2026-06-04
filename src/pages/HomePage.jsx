@@ -17,24 +17,24 @@ export default function HomePage() {
 
   const greeting = () => {
     const h = new Date().getHours()
-    if (h < 12) return 'Good morning'
-    if (h < 18) return 'Good afternoon'
-    return 'Good evening'
+    if (h < 12) return 'Καλημέρα'
+    if (h < 18) return 'Καλό απόγευμα'
+    return 'Καλό βράδυ'
   }
 
   return (
     <div className={styles.page}>
       <div className={styles.header}>
         <h1 className={styles.greeting}>{greeting()}, {currentUser?.name?.split(' ')[0]} 👋</h1>
-        <p className={styles.sub}>Here's what's on your plate today</p>
+        <p className={styles.sub}>Ιδού τι σας περιμένει σήμερα</p>
       </div>
 
       {/* Stats */}
       <div className={styles.stats}>
         {[
-          { label: 'My open tasks', value: myTasks.length, accent: 'var(--coral)', bg: 'var(--coral-lt)' },
-          { label: 'Overdue',       value: overdue.length, accent: 'var(--red)',   bg: 'var(--red-lt)' },
-          { label: 'Completed',     value: done.length,    accent: 'var(--green)', bg: 'var(--green-lt)' },
+          { label: 'Ανοιχτές εργασίες', value: myTasks.length, accent: 'var(--coral)', bg: 'var(--coral-lt)' },
+          { label: 'Εκπρόθεσμες',       value: overdue.length, accent: 'var(--red)',   bg: 'var(--red-lt)' },
+          { label: 'Ολοκληρωμένες',     value: done.length,    accent: 'var(--green)', bg: 'var(--green-lt)' },
         ].map(s => (
           <div key={s.label} className={styles.statCard} style={{ borderTopColor: s.accent }}>
             <div className={styles.statNum} style={{ color: s.accent }}>{s.value}</div>
@@ -44,12 +44,12 @@ export default function HomePage() {
       </div>
 
       <div className={styles.two}>
-        {/* My upcoming tasks */}
+        {/* Επερχόμενες εργασίες μου */}
         <div>
-          <h2 className={styles.sectionTitle}>My upcoming tasks</h2>
+          <h2 className={styles.sectionTitle}>Επερχόμενες εργασίες μου</h2>
           <div className={styles.card}>
             {myTasks.length === 0 && (
-              <p className={styles.empty}>You're all caught up 🎉</p>
+              <p className={styles.empty}>Τα έχετε όλα σε τάξη 🎉</p>
             )}
             {myTasks.slice(0, 6).map(t => (
               <TaskRow key={t.id} task={t} onClick={setSelected} />
@@ -57,9 +57,9 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Projects overview */}
+        {/* Επισκόπηση έργων */}
         <div>
-          <h2 className={styles.sectionTitle}>Projects overview</h2>
+          <h2 className={styles.sectionTitle}>Επισκόπηση έργων</h2>
           <div className={styles.projectList}>
             {projects.map(p => {
               const pt = tasks.filter(t => t.projectId === p.id)
@@ -75,7 +75,7 @@ export default function HomePage() {
                   <div className={styles.progressTrack}>
                     <div className={styles.progressBar} style={{ width: `${pct}%`, background: p.color }} />
                   </div>
-                  <div className={styles.projPct}>{pct}% complete</div>
+                  <div className={styles.projPct}>{pct}% ολοκλήρωση</div>
                 </div>
               )
             })}

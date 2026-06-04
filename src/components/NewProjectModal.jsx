@@ -26,7 +26,7 @@ export default function NewProjectModal({ onClose }) {
         <input
           autoFocus
           className={styles.input}
-          placeholder="e.g. Website Redesign"
+          placeholder="π.χ. Νέος Διαγωνισμός"
           value={name}
           onChange={e => setName(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && handleCreate()}
@@ -36,7 +36,7 @@ export default function NewProjectModal({ onClose }) {
         <label className={styles.label}>Description</label>
         <textarea
           className={styles.textarea}
-          placeholder="What is this project about?"
+          placeholder="Περιγραφή έργου…"
           value={description}
           onChange={e => setDescription(e.target.value)}
         />

@@ -31,7 +31,7 @@ export default function NewTaskModal({ defaultProjectId, defaultSection, onClose
         <input
           className={styles.input}
           autoFocus
-          placeholder="What needs to be done?"
+          placeholder="Τι πρέπει να γίνει;"
           value={form.name}
           onChange={set('name')}
           onKeyDown={e => e.key === 'Enter' && handleSubmit()}
@@ -56,9 +56,9 @@ export default function NewTaskModal({ defaultProjectId, defaultSection, onClose
         <div className={styles.field}>
           <label className={styles.label}>Priority</label>
           <select className={styles.select} value={form.priority} onChange={set('priority')}>
-            <option value="high">High</option>
+            <option value="high">Υψηλή</option>
             <option value="med">Medium</option>
-            <option value="low">Low</option>
+            <option value="low">Χαμηλή</option>
           </select>
         </div>
         <div className={styles.field}>
@@ -68,7 +68,7 @@ export default function NewTaskModal({ defaultProjectId, defaultSection, onClose
         <div className={styles.field} style={{ gridColumn: '1 / -1' }}>
           <label className={styles.label}>Assignee</label>
           <select className={styles.select} value={form.assigneeId} onChange={set('assigneeId')}>
-            <option value="">Unassigned</option>
+            <option value="">Χωρίς ανάθεση</option>
             {members.map(m => <option key={m.id} value={m.id}>{m.name}</option>)}
           </select>
         </div>
@@ -76,7 +76,7 @@ export default function NewTaskModal({ defaultProjectId, defaultSection, onClose
           <label className={styles.label}>Description</label>
           <textarea
             className={styles.textarea}
-            placeholder="Add more context…"
+            placeholder="Προσθέστε περισσότερες πληροφορίες…"
             value={form.description}
             onChange={set('description')}
           />

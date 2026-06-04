@@ -61,3 +61,11 @@
   color: var(--text-3);
 }
 .overdue { color: var(--red); }
+.checkLocked {
+  cursor: not-allowed !important;
+  opacity: .5;
+}
+.checkLocked:hover {
+  border-color: var(--border-md) !important;
+  background: transparent !important;
+}

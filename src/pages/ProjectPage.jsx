@@ -1,27 +1,28 @@
 import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { IconList, IconLayoutKanban, IconTimeline, IconPlus, IconTrash, IconPencil } from '@tabler/icons-react'
-import useStore from '../store/useStore'
+import useStore, { canManageProject, isProjectMember } from '../store/useStore'
 import TaskRow from '../components/TaskRow'
 import TaskDetailModal from '../components/TaskDetailModal'
 import Modal from '../components/Modal'
 import NewTaskModal from '../components/NewTaskModal'
+import BoardView from '../components/BoardView'
 import styles from './ProjectPage.module.css'
 
 const VIEWS = [
-  { key: 'list',     Icon: IconList,           label: 'List' },
-  { key: 'board',    Icon: IconLayoutKanban,   label: 'Board' },
-  { key: 'timeline', Icon: IconTimeline,       label: 'Timeline' },
+  { key: 'list',     Icon: IconList,           label: 'Λίστα' },
+  { key: 'board',    Icon: IconLayoutKanban,   label: 'Kanban' },
+  { key: 'timeline', Icon: IconTimeline,       label: 'Χρονοδιάγραμμα' },
 ]
 
 export default function ProjectPage() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { projects, tasks, members, deleteProject, currentUserId } = useStore()
-  const currentUser = members.find(m => m.id === currentUserId)
-
-  const project = projects.find(p => p.id === id)
+  const { projects, tasks, members, deleteProject, currentUserId, addProjectMember, removeProjectMember } = useStore()
+  const currentUser  = members.find(m => m.id === currentUserId)
+  const project      = projects.find(p => p.id === id)
   const projectTasks = tasks.filter(t => t.projectId === id)
+  const canManage    = canManageProject(project, currentUser)
 
   const [view, setView] = useState('list')
   const [selected, setSelected] = useState(null)
@@ -29,10 +30,19 @@ export default function ProjectPage() {
   const [editOpen, setEditOpen] = useState(false)
 
   if (!project) return (
-    <div style={{ padding: 40, color: 'var(--text-3)' }}>Project not found.</div>
+    <div style={{ padding: 40, color: 'var(--text-3)' }}>Το έργο δεν βρέθηκε.</div>
+  )
+
+  // Members not in the project cannot access it
+  if (currentUser?.role === 'member' && !isProjectMember(project, currentUserId)) return (
+    <div style={{ padding: 40, color: 'var(--text-3)' }}>
+      <div style={{ fontSize: 18, fontWeight: 600, marginBottom: 8 }}>Δεν έχετε πρόσβαση</div>
+      <div>Δεν είστε μέλος αυτού του έργου. Ζητήστε από διαχειριστή ή διευθυντή να σας προσθέσει.</div>
+    </div>
   )
 
   const handleDelete = () => {
+    if (!canManage) return
     deleteProject(id)
     navigate('/home')
   }
@@ -48,10 +58,10 @@ export default function ProjectPage() {
         )}
         {currentUser?.role === 'admin' && (
           <div className={styles.headerActions}>
-            <button className={styles.iconBtn} onClick={() => setEditOpen(true)} title="Edit project">
+            <button className={styles.iconBtn} onClick={() => setEditOpen(true)} title="Επεξεργασία έργου">
               <IconPencil size={15} />
             </button>
-            <button className={styles.iconBtn} onClick={handleDelete} title="Delete project" style={{ color: 'var(--red)' }}>
+            <button className={styles.iconBtn} onClick={handleDelete} title="Διαγραφή έργου" style={{ color: 'var(--red)' }}>
               <IconTrash size={15} />
             </button>
           </div>
@@ -70,15 +80,17 @@ export default function ProjectPage() {
           </button>
         ))}
         <div className={styles.tabSpacer} />
-        <button className={styles.addBtn} onClick={() => setNewTask({ section: project.sections?.[0] || 'To Do' })}>
-          <IconPlus size={14} /> Add task
-        </button>
+        {canManage && (
+          <button className={styles.addBtn} onClick={() => setNewTask({ section: project.sections?.[0] || 'To Do' })}>
+            <IconPlus size={14} /> Add task
+          </button>
+        )}
       </div>
 
       {/* Content */}
       <div className={styles.content}>
-        {view === 'list'     && <ListView     project={project} tasks={projectTasks} onSelect={setSelected} onNewTask={setNewTask} />}
-        {view === 'board'    && <BoardView    project={project} tasks={projectTasks} onSelect={setSelected} onNewTask={setNewTask} />}
+        {view === 'list'     && <ListView     project={project} tasks={projectTasks} onSelect={setSelected} onNewTask={setNewTask} canManage={canManage} />}
+        {view === 'board' && <BoardView project={project} tasks={projectTasks} onSelect={setSelected} onNewTask={setNewTask} />}
         {view === 'timeline' && <TimelineView project={project} tasks={projectTasks} onSelect={setSelected} />}
       </div>
 
@@ -99,7 +111,7 @@ export default function ProjectPage() {
         </Modal>
       )}
       {editOpen && (
-        <Modal title="Edit project" onClose={() => setEditOpen(false)}>
+        <Modal title="Επεξεργασία έργου" onClose={() => setEditOpen(false)}>
           <EditProjectModal project={project} onClose={() => setEditOpen(false)} />
         </Modal>
       )}
@@ -108,7 +120,7 @@ export default function ProjectPage() {
 }
 
 // ── LIST VIEW ────────────────────────────────────────────────────────────────
-function ListView({ project, tasks, onSelect, onNewTask }) {
+function ListView({ project, tasks, onSelect, onNewTask, canManage }) {
   const sections = project.sections || ['To Do', 'In Progress', 'Review', 'Done']
   const [collapsed, setCollapsed] = useState({})
 
@@ -124,79 +136,19 @@ function ListView({ project, tasks, onSelect, onNewTask }) {
               <span className={styles.sectionName}>{sec}</span>
               <span className={styles.sectionCount}>{sts.length}</span>
               <div className={styles.sectionLine} />
-              <button className={styles.sectionAdd} onClick={e => { e.stopPropagation(); onNewTask({ section: sec }) }}>
-                + Add
-              </button>
+              {canManage && <button className={styles.sectionAdd} onClick={e => { e.stopPropagation(); onNewTask({ section: sec }) }}>+ Add</button>}
             </div>
             {!isCollapsed && (
               <>
                 {sts.map(t => <TaskRow key={t.id} task={t} onClick={onSelect} />)}
-                <button className={styles.addRowBtn} onClick={() => onNewTask({ section: sec })}>
-                  <span className={styles.addRowDot}>+</span>
-                  <span>Add task to {sec}</span>
-                </button>
+                {canManage && (
+                  <button className={styles.addRowBtn} onClick={() => onNewTask({ section: sec })}>
+                    <span className={styles.addRowDot}>+</span>
+                    <span>Προσθήκη εργασίας στο {sec}</span>
+                  </button>
+                )}
               </>
             )}
-          </div>
-        )
-      })}
-    </div>
-  )
-}
-
-// ── BOARD VIEW ───────────────────────────────────────────────────────────────
-const COL_COLORS = { 'To Do': '#888780', 'In Progress': '#185FA5', 'Review': '#534AB7', 'Done': '#0F6E56', 'Backlog': '#854F0B', 'Testing': '#A32D2D' }
-
-function BoardView({ project, tasks, onSelect, onNewTask }) {
-  const { moveTask, members } = useStore()
-  const sections = project.sections || ['To Do', 'In Progress', 'Review', 'Done']
-
-  return (
-    <div className={styles.board}>
-      {sections.map(sec => {
-        const cts = tasks.filter(t => t.section === sec)
-        const color = COL_COLORS[sec] || '#888780'
-        return (
-          <div key={sec} className={styles.col}>
-            <div className={styles.colHeader}>
-              <div className={styles.colDot} style={{ background: color }} />
-              <span className={styles.colTitle}>{sec}</span>
-              <span className={styles.colCount}>{cts.length}</span>
-              <button className={styles.colAdd} onClick={() => onNewTask({ section: sec })}>
-                <IconPlus size={14} />
-              </button>
-            </div>
-            <div className={styles.cards}>
-              {cts.map(t => {
-                const assignee = members.find(m => m.id === t.assigneeId)
-                return (
-                  <div key={t.id} className={styles.card} onClick={() => onSelect(t)}>
-                    <div className={styles.cardTitle}>{t.name}</div>
-                    <div className={styles.cardMeta}>
-                      <span className={`badge badge-${t.priority}`}>{t.priority}</span>
-                      {t.due && <span className={styles.cardDue}>{t.due}</span>}
-                      {assignee && (
-                        <div className="avatar avatar-sm" style={{ background: assignee.color, marginLeft: 'auto' }}>
-                          {assignee.initials}
-                        </div>
-                      )}
-                    </div>
-                    {/* Move to section dropdown */}
-                    <select
-                      className={styles.moveSelect}
-                      value={t.section}
-                      onClick={e => e.stopPropagation()}
-                      onChange={e => moveTask(t.id, e.target.value)}
-                    >
-                      {sections.map(s => <option key={s}>{s}</option>)}
-                    </select>
-                  </div>
-                )
-              })}
-            </div>
-            <button className={styles.colAddBtn} onClick={() => onNewTask({ section: sec })}>
-              <IconPlus size={13} /> Add card
-            </button>
           </div>
         )
       })}
@@ -244,7 +196,7 @@ function TimelineView({ project, tasks, onSelect }) {
         )
       })}
       {tasksWithDue.length === 0 && (
-        <p style={{ color: 'var(--text-3)', fontSize: 13, padding: '16px 0' }}>No tasks with due dates yet.</p>
+        <p style={{ color: 'var(--text-3)', fontSize: 13, padding: '16px 0' }}>Δεν υπάρχουν εργασίες με προθεσμία ακόμα.</p>
       )}
     </div>
   )

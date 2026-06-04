@@ -3,20 +3,22 @@ import useStore from '../store/useStore'
 import styles from './NotifPanel.module.css'
 
 export default function NotifPanel({ onClose }) {
-  const { notifications, markNotifRead, markAllRead } = useStore()
+  const { notifications, markNotifRead, markAllRead, currentUserId } = useStore()
+  // Show: notifications with no target (broadcast) OR targeted at the current user
+  const visible = notifications.filter(n => !n.targetUserId || n.targetUserId === currentUserId)
 
   return (
     <>
       <div className={styles.backdrop} onClick={onClose} />
       <div className={styles.panel}>
         <div className={styles.header}>
-          <span style={{ fontWeight: 600, fontSize: 14 }}>Notifications</span>
+          <span style={{ fontWeight: 600, fontSize: 14 }}>Ειδοποιήσεις</span>
           <button className={styles.markAll} onClick={markAllRead}>
             <IconCheck size={13} /> Mark all read
           </button>
         </div>
         <div className={styles.list}>
-          {notifications.map(n => (
+          {visible.map(n => (
             <div
               key={n.id}
               className={`${styles.item} ${!n.read ? styles.unread : ''}`}

@@ -13,13 +13,13 @@ export default function MyTasksPage() {
   const [newTask, setNewTask] = useState(false)
 
   const myTasks = tasks.filter(t => t.assigneeId === currentUserId)
-  const sections = ['To Do', 'In Progress', 'Review', 'Done']
+  const sections = ['Προς Εκτέλεση', 'Σε Εξέλιξη', 'Έλεγχος', 'Ολοκληρώθηκε']
 
   return (
     <div className={styles.page}>
       <div className={styles.header}>
         <h1 className={styles.title}>My Tasks</h1>
-        <button className={styles.addBtn} onClick={() => setNewTask(true)}>+ Add task</button>
+        <button className={styles.addBtn} onClick={() => setNewTask(true)}>+ Προσθήκη εργασίας</button>
       </div>
       <div className={styles.content}>
         {sections.map(sec => {
@@ -32,7 +32,7 @@ export default function MyTasksPage() {
                 <div className={styles.secLine} />
               </div>
               {sts.map(t => <TaskRow key={t.id} task={t} onClick={setSelected} />)}
-              {sts.length === 0 && <p className={styles.empty}>No tasks in {sec}</p>}
+              {sts.length === 0 && <p className={styles.empty}>Δεν υπάρχουν εργασίες στο {sec}</p>}
             </div>
           )
         })}

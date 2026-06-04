@@ -11,10 +11,10 @@ export default function AdminPage() {
   }
 
   const stats = [
-    { label: 'Total tasks',  value: tasks.length,                         accent: 'var(--coral)' },
-    { label: 'Completed',    value: tasks.filter(t => t.done).length,     accent: 'var(--green)' },
-    { label: 'Members',      value: members.length,                       accent: 'var(--purple)' },
-    { label: 'Projects',     value: projects.length,                      accent: 'var(--blue)' },
+    { label: 'Σύνολο εργασιών',  value: tasks.length,                         accent: 'var(--coral)' },
+    { label: 'Ολοκληρωμένες',    value: tasks.filter(t => t.done).length,     accent: 'var(--green)' },
+    { label: 'Μέλη',      value: members.length,                       accent: 'var(--purple)' },
+    { label: 'Έργα',     value: projects.length,                      accent: 'var(--blue)' },
   ]
 
   return (

@@ -8,7 +8,7 @@ export default function InboxPage() {
     <div className={styles.page}>
       <div className={styles.header}>
         <h1 className={styles.title}>Inbox</h1>
-        <button className={styles.addBtn} onClick={markAllRead}>Mark all read</button>
+        <button className={styles.addBtn} onClick={markAllRead}>Σήμανση όλων ως αναγνωσμένα</button>
       </div>
       <div className={styles.content}>
         {notifications.map(n => (
