@@ -7,11 +7,15 @@ import useStore, { slackLog } from '../store/useStore'
 import styles from './SettingsPage.module.css'
 
 const SLACK_EVENTS = [
-  { key: 'taskAssigned',  label: 'Ανάθεση εργασίας',    desc: 'Όταν μια εργασία ανατίθεται ή επανανατίθεται' },
-  { key: 'taskCompleted', label: 'Ολοκλήρωση εργασίας', desc: 'Όταν μια εργασία σημειωθεί ως ολοκληρωμένη' },
-  { key: 'taskCreated',   label: 'Δημιουργία εργασίας', desc: 'Όταν δημιουργείται νέα εργασία' },
-  { key: 'taskUpdated',   label: 'Ενημέρωση / Μετακίνηση', desc: 'Αλλαγή κατάστασης ή πεδίων εργασίας (συχνό)' },
-  { key: 'commentAdded',  label: 'Νέο σχόλιο',          desc: 'Όταν προστίθεται σχόλιο σε εργασία' },
+  { key: 'taskAssigned',   label: 'Ανάθεση εργασίας',       desc: 'Όταν μια εργασία ανατίθεται σε κάποιον' },
+  { key: 'taskCreated',    label: 'Δημιουργία εργασίας',    desc: 'Όταν δημιουργείται νέα εργασία χωρίς ανάθεση' },
+  { key: 'statusChanged',  label: 'Αλλαγή κατάστασης',      desc: 'Μεταφορά εργασίας σε άλλη στήλη (π.χ. → Σε Εξέλιξη)' },
+  { key: 'taskCompleted',  label: 'Ολοκλήρωση εργασίας',   desc: 'Όταν μια εργασία σημειωθεί ως ολοκληρωμένη' },
+  { key: 'taskReopened',   label: 'Επαναστάθηκε εργασία',   desc: 'Όταν μια ολοκληρωμένη εργασία ξανανοίξει' },
+  { key: 'commentAdded',   label: 'Νέο σχόλιο',             desc: 'Όταν προστίθεται σχόλιο σε εργασία' },
+  { key: 'subtaskAdded',   label: 'Νέα υποεργασία',         desc: 'Όταν προστίθεται υποεργασία' },
+  { key: 'dueDateChanged', label: 'Αλλαγή προθεσμίας',      desc: 'Όταν αλλάζει η ημερομηνία προθεσμίας' },
+  { key: 'taskUpdated',    label: 'Γενική ενημέρωση',       desc: 'Κάθε άλλη αλλαγή πεδίου (πολύ συχνό — προτείνεται OFF)' },
 ]
 
 export default function SettingsPage() {

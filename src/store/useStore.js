@@ -185,9 +185,13 @@ const useStore = create(
       slackEvents: {
         taskAssigned:   true,
         taskCompleted:  true,
-        taskUpdated:    false,
+        taskReopened:   true,
         taskCreated:    true,
-        commentAdded:   false,
+        statusChanged:  true,
+        subtaskAdded:   false,
+        dueDateChanged: false,
+        commentAdded:   true,
+        taskUpdated:    false,
       },
       setSlackEnabled:      (val)           => set({ slackEnabled: val }),
       setProjectWebhook:    (projId, url)   => set(s => ({ projectWebhooks: { ...s.projectWebhooks, [projId]: url } })),
@@ -296,10 +300,19 @@ const useStore = create(
 
         set(s => ({ tasks: s.tasks.map(t => t.id === id ? { ...t, ...patch } : t) }))
         get().pushUpdate(`Ενημερώθηκε: "${task.name}"`)
-        get()._slack(
-          `:pencil: *Ενημερώθηκε:* ${task.name}\n<${window.location.origin}/projects/${task.projectId}|Άνοιγμα →>`,
-          'taskUpdated', task.projectId
-        )
+
+        // Due date changed
+        if (patch.due && patch.due !== task.due) {
+          get()._slack(
+            `:calendar: *Αλλαγή προθεσμίας:* ${task.name}\n*Νέα προθεσμία:* ${patch.due}\n<${window.location.origin}/projects/${task.projectId}|Άνοιγμα →>`,
+            'dueDateChanged', task.projectId
+          )
+        } else {
+          get()._slack(
+            `:pencil: *Ενημερώθηκε:* ${task.name}\n<${window.location.origin}/projects/${task.projectId}|Άνοιγμα →>`,
+            'taskUpdated', task.projectId
+          )
+        }
         return true
       },
 
@@ -319,6 +332,11 @@ const useStore = create(
           get()._slack(
             `:white_check_mark: *Ολοκληρώθηκε:* ${task.name}\n<${window.location.origin}/projects/${task.projectId}|Άνοιγμα →>`,
             'taskCompleted', task.projectId
+          )
+        } else {
+          get()._slack(
+            `:arrows_counterclockwise: *Επαναστάθηκε:* ${task.name}\n<${window.location.origin}/projects/${task.projectId}|Άνοιγμα →>`,
+            'taskReopened', task.projectId
           )
         }
         return true
@@ -342,8 +360,8 @@ const useStore = create(
         set(s => ({ tasks: s.tasks.map(t => t.id === taskId ? { ...t, section: toSection } : t) }))
         get().pushUpdate(`Μεταφέρθηκε: "${task.name}" → ${toSection}`)
         get()._slack(
-          `:arrow_right: *${task.name}* → ${toSection}\n<${window.location.origin}/projects/${task.projectId}|Άνοιγμα →>`,
-          'taskUpdated', task.projectId
+          `:arrow_right: *${task.name}* → *${toSection}*\n<${window.location.origin}/projects/${task.projectId}|Άνοιγμα →>`,
+          'statusChanged', task.projectId
         )
         return true
       },
@@ -384,6 +402,10 @@ const useStore = create(
         const project     = get().projects.find(p => p.id === task?.projectId)
         if (!canEditTask(task, project, currentUser)) return
         set(s => ({ tasks: s.tasks.map(t => t.id === taskId ? { ...t, subtasks: [...(t.subtasks || []), { id: uuid(), name, done: false }] } : t) }))
+        get()._slack(
+          `:white_small_square: *Νέα υποεργασία* στο "${task.name}":\n> ${name}\n<${window.location.origin}/projects/${task.projectId}|Άνοιγμα →>`,
+          'subtaskAdded', task.projectId
+        )
       },
       toggleSubtask: (taskId, subtaskId) => {
         const currentUser = get().getCurrentUser()
