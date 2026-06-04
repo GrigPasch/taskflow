@@ -6,7 +6,7 @@ const hashPassword  = (pw)       => btoa(pw + '_taskflow_salt')
 const checkPassword = (pw, hash) => hashPassword(pw) === hash
 
 // ── Slack notification helper — goes through local proxy to avoid CORS ──────
-const PROXY_URL = 'http://localhost:3001/api/slack'
+const PROXY_URL = '/api/slack'
 
 // In-memory log for the debug panel in Settings
 export const slackLog = []
@@ -262,12 +262,12 @@ const useStore = create(
             ...s.notifications,
           ]}))
           get()._slack(
-            `:bell: *Νέα εργασία για σένα, ${assignee?.name}!*\n>${task.name}\n<http://localhost:5173/projects/${task.projectId}|Άνοιγμα εργασίας →>`,
+            `:bell: *Νέα εργασία για σένα, ${assignee?.name}!*\n>${task.name}\n<${window.location.origin}/projects/${task.projectId}|Άνοιγμα εργασίας →>`,
             'taskAssigned', task.projectId
           )
         }
         get()._slack(
-          `:memo: *Νέα εργασία:* ${task.name}\n<http://localhost:5173/projects/${task.projectId}|Άνοιγμα →>`,
+          `:memo: *Νέα εργασία:* ${task.name}\n<${window.location.origin}/projects/${task.projectId}|Άνοιγμα →>`,
           'taskCreated', task.projectId
         )
         return id
@@ -287,7 +287,7 @@ const useStore = create(
             ...s.notifications,
           ]}))
           get()._slack(
-            `:bell: *Νέα εργασία για σένα, ${newAssignee?.name}!*\n>${task.name}\n<http://localhost:5173/projects/${task.projectId}|Άνοιγμα εργασίας →>`,
+            `:bell: *Νέα εργασία για σένα, ${newAssignee?.name}!*\n>${task.name}\n<${window.location.origin}/projects/${task.projectId}|Άνοιγμα εργασίας →>`,
             'taskAssigned', task.projectId
           )
         }
@@ -295,7 +295,7 @@ const useStore = create(
         set(s => ({ tasks: s.tasks.map(t => t.id === id ? { ...t, ...patch } : t) }))
         get().pushUpdate(`Ενημερώθηκε: "${task.name}"`)
         get()._slack(
-          `:pencil: *Ενημερώθηκε:* ${task.name}\n<http://localhost:5173/projects/${task.projectId}|Άνοιγμα →>`,
+          `:pencil: *Ενημερώθηκε:* ${task.name}\n<${window.location.origin}/projects/${task.projectId}|Άνοιγμα →>`,
           'taskUpdated', task.projectId
         )
         return true
@@ -315,7 +315,7 @@ const useStore = create(
         get().pushUpdate(done ? `✓ "${task.name}" ολοκληρώθηκε` : `"${task.name}" επαναστάθηκε`)
         if (done) {
           get()._slack(
-            `:white_check_mark: *Ολοκληρώθηκε:* ${task.name}\n<http://localhost:5173/projects/${task.projectId}|Άνοιγμα →>`,
+            `:white_check_mark: *Ολοκληρώθηκε:* ${task.name}\n<${window.location.origin}/projects/${task.projectId}|Άνοιγμα →>`,
             'taskCompleted', task.projectId
           )
         }
@@ -340,7 +340,7 @@ const useStore = create(
         set(s => ({ tasks: s.tasks.map(t => t.id === taskId ? { ...t, section: toSection } : t) }))
         get().pushUpdate(`Μεταφέρθηκε: "${task.name}" → ${toSection}`)
         get()._slack(
-          `:arrow_right: *${task.name}* → ${toSection}\n<http://localhost:5173/projects/${task.projectId}|Άνοιγμα →>`,
+          `:arrow_right: *${task.name}* → ${toSection}\n<${window.location.origin}/projects/${task.projectId}|Άνοιγμα →>`,
           'taskUpdated', task.projectId
         )
         return true
@@ -370,7 +370,7 @@ const useStore = create(
           ]}))
         }
         get()._slack(
-          `:speech_balloon: *Νέο σχόλιο από ${currentUser.name}:* ${text}\n<http://localhost:5173/projects/${task.projectId}|Άνοιγμα →>`,
+          `:speech_balloon: *Νέο σχόλιο από ${currentUser.name}:* ${text}\n<${window.location.origin}/projects/${task.projectId}|Άνοιγμα →>`,
           'commentAdded', task.projectId
         )
       },

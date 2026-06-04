@@ -32,7 +32,7 @@ export default function SettingsPage() {
 
   // Check proxy server
   useEffect(() => {
-    fetch('http://localhost:3001/api/health')
+    fetch('/api/health')
       .then(r => r.ok ? setServerStatus('ok') : setServerStatus('err'))
       .catch(() => setServerStatus('err'))
   }, [])
@@ -115,18 +115,8 @@ export default function SettingsPage() {
 
           {/* Proxy server status */}
           <div className={`${styles.serverBanner} ${serverStatus === 'ok' ? styles.serverOk : serverStatus === 'err' ? styles.serverErr : styles.serverUnknown}`}>
-            {serverStatus === 'ok'  && <><IconCircleCheck size={15} /> Proxy server τρέχει — το Slack είναι έτοιμο</>}
-            {serverStatus === 'err' && (
-              <div>
-                <div style={{ display:'flex', alignItems:'center', gap:6, fontWeight:600, marginBottom:6 }}>
-                  <IconCircleX size={15} /> Proxy server δεν τρέχει
-                </div>
-                <div style={{ fontSize:12.5 }}>
-                  Ανοίξτε ένα terminal στον φάκελο <code>taskflow/</code> και τρέξτε:
-                </div>
-                <code className={styles.codeBlock}>npm run server</code>
-              </div>
-            )}
+            {serverStatus === 'ok'  && <><IconCircleCheck size={15} /> Slack API είναι έτοιμο</>}
+            {serverStatus === 'err' && <><IconCircleX size={15} /> Slack API μη διαθέσιμο — ελέγξτε τη σύνδεσή σας</> }
             {serverStatus === null && 'Έλεγχος server…'}
           </div>
 
