@@ -2,16 +2,24 @@ import useStore from '../store/useStore'
 import styles from './SharedPage.module.css'
 
 export default function InboxPage() {
-  const { notifications, markNotifRead, markAllRead } = useStore()
+  const { notifications, markNotifRead, markAllRead, currentUserId } = useStore()
+
+  // Only show notifications targeted at the current user or broadcast (no target)
+  const visible = notifications.filter(n => !n.targetUserId || n.targetUserId === currentUserId)
 
   return (
     <div className={styles.page}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Inbox</h1>
+        <h1 className={styles.title}>Εισερχόμενα</h1>
         <button className={styles.addBtn} onClick={markAllRead}>Σήμανση όλων ως αναγνωσμένα</button>
       </div>
       <div className={styles.content}>
-        {notifications.map(n => (
+        {visible.length === 0 && (
+          <p style={{ color: 'var(--text-3)', fontSize: 13, padding: '16px 4px' }}>
+            Δεν υπάρχουν ειδοποιήσεις.
+          </p>
+        )}
+        {visible.map(n => (
           <div
             key={n.id}
             className={`${styles.notifRow} ${!n.read ? styles.notifUnread : ''}`}
