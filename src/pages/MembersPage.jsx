@@ -112,21 +112,25 @@ function InviteForm({ members, onInvite, onClose }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
       {error && <div style={{ background: 'var(--red-lt)', color: 'var(--red)', padding: '8px 12px', borderRadius: 8, fontSize: 13 }}>{error}</div>}
-      <Field label="Full name">
-        <input style={inputStyle} type="text" placeholder="e.g. Jordan Lee" value={name} onChange={e => setName(e.target.value)} autoFocus />
+      <Field label="Πλήρες όνομα">
+        <input style={inputStyle} type="text" placeholder="π.χ. Γιώργης Παπαδόπουλος" value={name} onChange={e => setName(e.target.value)} autoFocus />
       </Field>
       <Field label="Email">
-        <input style={inputStyle} type="email" placeholder="jordan@company.com" value={email} onChange={e => setEmail(e.target.value)} />
+        <input style={inputStyle} type="email" placeholder="name@dromeas.gr" value={email} onChange={e => setEmail(e.target.value)} />
       </Field>
-      <Field label="Role">
+      <Field label="Κωδικός πρόσβασης">
+        <input style={inputStyle} type="password" placeholder="Τουλάχιστον 6 χαρακτήρες" value={password} onChange={e => setPassword(e.target.value)} />
+        <span style={{ fontSize: 11.5, color: 'var(--text-3)', marginTop: 3 }}>Ο χρήστης θα συνδεθεί με αυτόν τον κωδικό.</span>
+      </Field>
+      <Field label="Ρόλος">
         <select style={inputStyle} value={role} onChange={e => setRole(e.target.value)}>
           <option value="member">Member</option>
           <option value="admin">Admin</option>
         </select>
       </Field>
       <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', paddingTop: 4, borderTop: '1px solid var(--border)' }}>
-        <button onClick={onClose} style={cancelBtnStyle}>Cancel</button>
-        <button onClick={invite} style={submitBtnStyle}>Send invite</button>
+        <button onClick={onClose} style={cancelBtnStyle}>Ακύρωση</button>
+        <button onClick={invite} style={submitBtnStyle}>Αποστολή</button>
       </div>
     </div>
   )
